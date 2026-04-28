@@ -78,6 +78,18 @@ function Index() {
 
   return (
     <main className="relative min-h-screen overflow-hidden flex items-center justify-center px-4">
+      <audio ref={audioRef} src={themeSong} preload="auto" />
+
+      {revealed && (
+        <button
+          onClick={toggleMute}
+          aria-label={muted ? "Unmute music" : "Mute music"}
+          className="fixed top-6 right-6 z-50 p-3 rounded-full bg-card/60 backdrop-blur-md border border-primary/30 text-foreground hover:scale-110 hover:bg-card/80 transition-all"
+        >
+          {muted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+        </button>
+      )}
+
       {/* Animated grid backdrop */}
       <div
         className="pointer-events-none absolute inset-0 opacity-20"
