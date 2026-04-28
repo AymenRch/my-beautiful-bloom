@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
-import { Sparkles, Star } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Sparkles, Star, Volume2, VolumeX } from "lucide-react";
 import hangout from "@/assets/coffee-hangout.jpg";
+import themeSong from "@/assets/theme.mp3";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -28,6 +29,8 @@ function Index() {
   const [revealed, setRevealed] = useState(false);
   const [particles, setParticles] = useState<Particle[]>([]);
   const [msgIndex, setMsgIndex] = useState(0);
+  const [muted, setMuted] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const burst = () => {
     const chars = ["✦", "✧", "★", "✨", "◆", "●", "○"];
@@ -45,9 +48,25 @@ function Index() {
   };
 
   const handleClick = () => {
-    if (!revealed) setRevealed(true);
-    else setMsgIndex((i) => (i + 1) % messages.length);
+    if (!revealed) {
+      setRevealed(true);
+      const audio = audioRef.current;
+      if (audio) {
+        audio.volume = 0.6;
+        audio.loop = true;
+        audio.play().catch(() => {});
+      }
+    } else {
+      setMsgIndex((i) => (i + 1) % messages.length);
+    }
     burst();
+  };
+
+  const toggleMute = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.muted = !audio.muted;
+    setMuted(audio.muted);
   };
 
   useEffect(() => {
